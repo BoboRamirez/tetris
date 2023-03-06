@@ -4,10 +4,9 @@ using UnityEngine;
 
 public abstract class Tetrimino : MonoBehaviour
 {
-    protected GameObject tetriminoPiece = null;
     protected RotationState orientation = RotationState.north;
     protected TetriminoType type = TetriminoType.O;
-    protected MatCoor[] minos;
+    protected MatCoor[] minoCoordinates;
     protected int rotationCenter = 0;
     protected Dictionary<RotationState, MatCoor[]> rotationOffset;
     protected float fallCounter = 0;
@@ -19,6 +18,7 @@ public abstract class Tetrimino : MonoBehaviour
             return Data.fallDelay[GameManager.manager.difficulty];
         }
     }
+    private readonly MatrixManager matrix = MatrixManager.manager;
     /*
     protected int LeftBorder
     {
@@ -27,8 +27,8 @@ public abstract class Tetrimino : MonoBehaviour
             int min = 9;
             for (int i = 0; i < 4; i++)
             {
-                if (minos[i,0] < min)
-                    min = minos[i,0];
+                if (minoCoordinates[i,0] < min)
+                    min = minoCoordinates[i,0];
             }
             return min;
         }
@@ -41,8 +41,8 @@ public abstract class Tetrimino : MonoBehaviour
             int max = 0;
             for (int i = 0; i < 4; i++)
             {
-                if (minos[i, 0] > max)
-                    max = minos[i, 0];
+                if (minoCoordinates[i, 0] > max)
+                    max = minoCoordinates[i, 0];
             }
             return max;
         }
@@ -55,8 +55,8 @@ public abstract class Tetrimino : MonoBehaviour
             int min = 9;
             for (int i = 0; i < 4; i++)
             {
-                if (minos[i, 1] < min)
-                    min = minos[i, 1];
+                if (minoCoordinates[i, 1] < min)
+                    min = minoCoordinates[i, 1];
             }
             return min;
         }
@@ -82,16 +82,15 @@ public abstract class Tetrimino : MonoBehaviour
     {
         type = t;
         orientation = RotationState.north;
-        minos = GetMinoPos(RotationState.north, Data.spawnLocation[type]);
+        minoCoordinates = GetMinoPos(RotationState.north, Data.spawnLocation[type]);
         rotationOffset = Data.GetOffsetData(t);
         rotationCenter = Data.rotationCenterMap[t];
-        tetriminoPiece = this.gameObject;
     }
 
     /// <summary>
     /// get matrix location of drop spot, or ghost piece,  of current tetrimino
     /// </summary>
-    /// <returns>location of all 4 minos in matrix</returns>
+    /// <returns>location of all 4 minoCoordinates in matrix</returns>
     public MatCoor[] GetDropSpot()
     {
 
@@ -100,12 +99,12 @@ public abstract class Tetrimino : MonoBehaviour
         int dropDepth = 0;
         bool doesHit = false;
         for (int i = 0; i < 4; i++)
-            if (minos[i].y - 1 < 0) return minos;
+            if (minoCoordinates[i].y - 1 < 0) return minoCoordinates;
         for (int i = 0; i < 4; i++)
         {
-            below = MatrixManager.manager.matrix[minos[i].x, minos[i].y - 1];
+            below = matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].State;
             if (below < BlockState.active3) continue;
-            else if (below == BlockState.locked) return minos;
+            else if (below == BlockState.locked) return minoCoordinates;
             else bottomList.Add(i);
         }
 
@@ -114,26 +113,26 @@ public abstract class Tetrimino : MonoBehaviour
             foreach (int i in bottomList)
             {
                 dropDepth++;
-                if (minos[i].y - dropDepth - 1 < 0 || MatrixManager.manager.matrix[minos[i].x, minos[i].y - dropDepth - 1] == BlockState.locked)
+                if (minoCoordinates[i].y - dropDepth - 1 < 0 || matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - dropDepth - 1].State == BlockState.locked)
                     doesHit = true;
             }
         }
 
         return new MatCoor[]
         {
-            new MatCoor(minos[0], 0, -dropDepth),
-            new MatCoor(minos[1], 0, -dropDepth),
-            new MatCoor(minos[2], 0, -dropDepth),
-            new MatCoor(minos[3], 0, -dropDepth),
+            new MatCoor(minoCoordinates[0], 0, -dropDepth),
+            new MatCoor(minoCoordinates[1], 0, -dropDepth),
+            new MatCoor(minoCoordinates[2], 0, -dropDepth),
+            new MatCoor(minoCoordinates[3], 0, -dropDepth),
         };
     }
     public bool HasSpaceToFall()
     {
         for (int i = 0; i < 4; i++)
-            if (minos[i].y - 1 < 0) 
+            if (minoCoordinates[i].y - 1 < 0) 
                 return false;
         for (int i = 0; i < 4; i++)
-            if (MatrixManager.manager.matrix[minos[i].x, minos[i].y - 1] == BlockState.locked) 
+            if (matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].State == BlockState.locked) 
                 return false;
         return true;
     }
@@ -149,26 +148,25 @@ public abstract class Tetrimino : MonoBehaviour
         }
         
         for (int i = 0; i < 4; i++)
-            MatrixManager.manager.matrix[minos[i].x, minos[i].y] = BlockState.available;
+            matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y].setState(BlockState.available);
         for (int i = 0; i < 4; i++)
-            MatrixManager.manager.matrix[minos[i].x, minos[i].y - 1] = (BlockState) i;
+            matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].setState((BlockState) i);
         for (int i = 0; i < 4; i++)
-            minos[i].y--;
-        tetriminoPiece.transform.position -= Vector3.down;
+            minoCoordinates[i].y--;
+        gameObject.transform.position -= Vector3.down;
     }
     public void HardDrop()
     {
-        MatrixManager.manager.ClearBlocks(minos);
-        minos = GetDropSpot();
-        MatrixManager.manager.UpdateTetrimino(minos);
-        tetriminoPiece.transform.position = Data.GetUnityPos(orientation, minos[0]);
+        matrix.ClearBlocks(minoCoordinates);
+        minoCoordinates = GetDropSpot();
+        matrix.ShowBlocks(minoCoordinates);
+        gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
-    public void LockAndDestroy()
+    public void Lock()
     {
-        foreach (var block in minos)
+        foreach (var block in minoCoordinates)
         {
-            MatrixManager.manager.matrix[block.x, block.y] = BlockState.locked;
-            MatrixManager.manager.GenerateMinos();
+            matrix.minos[block.x, block.y].setState(BlockState.locked);
         }
         
     }
@@ -176,7 +174,7 @@ public abstract class Tetrimino : MonoBehaviour
     /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0
     /// </summary>
     /// <param name="r">Orientation</param>
-    /// <param name="p">minos of Mino No.0</param>
+    /// <param name="p">minoCoordinates of Mino No.0</param>
     /// <returns>matrix position of all Minos, including Mino No.0 </returns>
     public abstract MatCoor[] GetMinoPos(RotationState r, MatCoor p);
     public abstract void Rotate(bool isClockwise);

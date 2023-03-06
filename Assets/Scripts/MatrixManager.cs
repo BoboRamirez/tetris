@@ -5,9 +5,9 @@ using UnityEngine;
 public class MatrixManager : MonoBehaviour
 {
     public static MatrixManager manager;
-    public BlockState[,] matrix = new BlockState[10, 22];
     [SerializeField] private GameObject mino;
-    private GameObject[,] minos = new GameObject[10, 20];
+    public Mino[,] minos = new Mino[10, 20];
+    private GameObject tempMino;
 
     private void Awake()
     {
@@ -24,9 +24,9 @@ public class MatrixManager : MonoBehaviour
         for(int i = 0; i < 10; i++)
             for(int j = 0; j < 22; j++)
             {
-                matrix[i, j] = BlockState.available;
-                minos[i, j] = Instantiate(mino, new Vector2(0.5f + c.x, 0.5f + c.y), Quaternion.identity);
-                minos[i, j].
+                tempMino = Instantiate(mino, new Vector2(0.5f + i, 0.5f + j), Quaternion.identity);
+                minos[i, j] = tempMino.GetComponent<Mino>();
+                minos[i, j].Initialized(i, j);
             }
                 
     }
@@ -38,35 +38,33 @@ public class MatrixManager : MonoBehaviour
     public void ClearBlocks(MatCoor[] m)
     {
         foreach(MatCoor c in m)
-        {
-            matrix[c.x, c.y] = BlockState.available;
-        }
+            minos[c.x, c.y].setState(BlockState.available);
         return;
     }
     /// <summary>
-    /// update state of tetrimino into matrix
+    /// update _state of tetrimino into matrix
     /// </summary>
     /// <param name="m">coordinate of the tetrimino to be updated</param>
     /// <exception cref="System.ArgumentException">length of m is not 4</exception>
     /// <exception cref="System.Exception">some block is occupied</exception>
-    public void UpdateTetrimino(MatCoor[] m)
+    public void ShowBlocks(MatCoor[] m)
     {
-        if(m.Length != 4)
+        for (int i = 0; i < 4; i++)
         {
-            Debug.LogError("Wrong Coordinate Length!");
-            return;
-        }
-        for(int i = 0; i < 4; i++)
-        {
-            if(matrix[m[i].x, m[i].y] == BlockState.available)
-                matrix[m[i].x, m[i].y] = (BlockState)i;
-            else
+            if (minos[m[i].x, m[i].y].State == BlockState.available)
             {
-                Debug.LogError("Wrong coordinate: already occupied");
+                minos[m[i].x, m[i].y].setState((BlockState) i);
             }
+            else
+                Debug.LogError($"Wrong coordinate: ({m[i].x}:{m[i].y}) already occupied");
         }
         return ;
     }
+    /// <summary>
+    /// Generate minoCoordinates. Used only in initialization.
+    /// </summary>
+    /// <param name="c">Target Coordinate</param>
+    /// <returns>Generated Mino</returns>
     public GameObject GenerateMinos(MatCoor c)
     {
         return Instantiate(mino, new Vector2(0.5f + c.x, 0.5f + c.y), Quaternion.identity);

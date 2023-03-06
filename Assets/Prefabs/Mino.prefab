@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8441548781835560877}
   - component: {fileID: 8277168801841999231}
+  - component: {fileID: 4154560179581520241}
   m_Layer: 0
   m_Name: Mino
   m_TagString: Block
@@ -84,3 +85,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &4154560179581520241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2260586898903192113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c797da49a582b4a980728a8e98a4d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0

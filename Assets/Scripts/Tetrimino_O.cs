@@ -15,7 +15,7 @@ public class Tetrimino_O : Tetrimino
         Dictionary<RotationState, MatCoor[]> offsetData = Data.GetOffsetData(type);
         MatCoor offset;
         
-        MatrixManager.manager.ClearBlocks(minos);
+        MatrixManager.manager.ClearBlocks(minoCoordinates);
 
         orientation += isClockwise ? 1 : -1;
         if (orientation > RotationState.west)
@@ -25,12 +25,12 @@ public class Tetrimino_O : Tetrimino
         offset = offsetData[oldOrientation][0] - offsetData[orientation][0];
         //to keep rotation center from shifting an offset during rotation, have to use 2 for-loops...
         for (int i = 0; i < 4; i++)
-            minos[i] = (minos[i] - minos[rotationCenter]).Rotate90(isClockwise) + minos[rotationCenter];
+            minoCoordinates[i] = (minoCoordinates[i] - minoCoordinates[rotationCenter]).Rotate90(isClockwise) + minoCoordinates[rotationCenter];
         for (int i = 0; i < 4; i++)
-            minos[i] += offset;
+            minoCoordinates[i] += offset;
 
-        MatrixManager.manager.UpdateTetrimino(minos);
-        tetriminoPiece.transform.SetPositionAndRotation(Data.GetUnityPos(orientation, minos[0]),
+        MatrixManager.manager.UpdateTetrimino(minoCoordinates);
+        gameObject.transform.SetPositionAndRotation(Data.GetUnityPos(orientation, minoCoordinates[0]),
                                                         isClockwise ? Quaternion.Euler(0, 0, -90) : Quaternion.Euler(0, 0, 90));
         return;
     }

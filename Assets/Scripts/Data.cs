@@ -74,7 +74,7 @@ public static class Data
     /// get pos of tetrimino gameObject in Unity
     /// </summary>
     /// <param name="r">Orientation</param>
-    /// <param name="p">minos of Mino No.0</param>
+    /// <param name="p">minoCoordinates of Mino No.0</param>
     /// <returns>position in Vector2</returns>
     public static Vector2 GetUnityPos(RotationState r, MatCoor p)
     {
@@ -171,7 +171,7 @@ public enum TetriminoType
     Z,
 }
 /// <summary>
-/// the state of a single block in the Matrix, either empty, occupied or being used by a moving tetrimino
+/// the _state of a single block in the Matrix, either empty, occupied or being used by a moving tetrimino
 /// </summary>
 public enum BlockState
 {
@@ -183,7 +183,7 @@ public enum BlockState
     locked
 }
 /// <summary>
-/// state of the game
+/// _state of the game
 /// </summary>
 public enum GameState
 {
