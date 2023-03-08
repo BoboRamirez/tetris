@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class Spawner
 {
     private System.Random rand = new((int)System.DateTime.Now.Ticks);
     /// <summary>
     /// incoming tetrimino gameObjects, in the order of OITLJSZ
     /// </summary>
-    [SerializeField]private GameObject[] tetriminoInstances;
+    [SerializeField]
+    private GameObject[] tetriminoInstances;
     /// <summary>
     /// all types in order, shuffled later
     /// </summary>
@@ -21,7 +22,7 @@ public class Spawner : MonoBehaviour
     /// No. of Tetrimino to spawn in the types2Spawn
     /// </summary>
     private int cur;
-    void Start()
+    public Spawner()
     {
         int i = 0;
         foreach (var item in System.Enum.GetValues(typeof(TetriminoType)))
@@ -29,15 +30,6 @@ public class Spawner : MonoBehaviour
         instanceMap = BuildTetriminoDictionary(types2Spawn, tetriminoInstances);
         ShuffleSpawnList();
         cur = 0;
-    }
-    private void Update()
-    {
-        /*if (Input.GetKeyUp(KeyCode.V))
-        {
-            Spawn();
-            Debug.Log("spawn");
-        }*/
-
     }
     /// <summary>
     /// shuffle types2Spawn and reset cur
@@ -58,12 +50,12 @@ public class Spawner : MonoBehaviour
     /// <summary>
     /// Spawn the next tetrimino on the list. If the list is ending, shuffle.
     /// </summary>
-    public void Spawn()
+    public void Spawn(TetriminoType t)
     {
         /*
         if (cur >= Data.TetriminoCount)
             throw new System.ArgumentOutOfRangeException("cur");*/
-        TetriminoType t = types2Spawn[cur];
+        
         Instantiate(instanceMap[t], new Vector2(Data.spawnLocation[t].x, Data.spawnLocation[t].y), Quaternion.identity);
         cur++;
         if (cur >= Data.TetriminoCount)

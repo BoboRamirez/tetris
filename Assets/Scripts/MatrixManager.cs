@@ -5,7 +5,8 @@ using UnityEngine;
 public class MatrixManager : MonoBehaviour
 {
     public static MatrixManager manager;
-    [SerializeField] private GameObject mino;
+    [SerializeField]
+    private GameObject mino;
     public Mino[,] minos = new Mino[10, 20];
     private GameObject tempMino;
 
@@ -28,7 +29,6 @@ public class MatrixManager : MonoBehaviour
                 minos[i, j] = tempMino.GetComponent<Mino>();
                 minos[i, j].Initialized(i, j);
             }
-                
     }
     
     /// <summary>
@@ -47,8 +47,13 @@ public class MatrixManager : MonoBehaviour
     /// <param name="m">coordinate of the tetrimino to be updated</param>
     /// <exception cref="System.ArgumentException">length of m is not 4</exception>
     /// <exception cref="System.Exception">some block is occupied</exception>
-    public void ShowBlocks(MatCoor[] m)
+    public void ShowTetriminoBlocks(MatCoor[] m)
     {
+        if (m.Length != 4)
+        {
+            Debug.LogError("wrong coordinate array");
+            return;
+        }
         for (int i = 0; i < 4; i++)
         {
             if (minos[m[i].x, m[i].y].State == BlockState.available)
@@ -68,5 +73,17 @@ public class MatrixManager : MonoBehaviour
     public GameObject GenerateMinos(MatCoor c)
     {
         return Instantiate(mino, new Vector2(0.5f + c.x, 0.5f + c.y), Quaternion.identity);
+    }
+    /// <summary>
+    /// See if block in MatCoor c is available
+    /// </summary>
+    /// <param name="c">coordinate of target block</param>
+    /// <returns>true if available</returns>
+    public bool JudgeAvailability(MatCoor c)
+    {
+        bool isVacant = true;
+        if (c.x < 0 || c.x > 9 || c.y < 0 || c.y > 21 || minos[c.x, c.y].State != BlockState.available)
+            isVacant = false;
+        return isVacant;
     }
 }

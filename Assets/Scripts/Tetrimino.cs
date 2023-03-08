@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Tetrimino : MonoBehaviour
+public class Tetrimino : MonoBehaviour
 {
     protected RotationState orientation = RotationState.north;
     protected TetriminoType type = TetriminoType.O;
@@ -19,48 +19,6 @@ public abstract class Tetrimino : MonoBehaviour
         }
     }
     private readonly MatrixManager matrix = MatrixManager.manager;
-    /*
-    protected int LeftBorder
-    {
-        get 
-        {
-            int min = 9;
-            for (int i = 0; i < 4; i++)
-            {
-                if (minoCoordinates[i,0] < min)
-                    min = minoCoordinates[i,0];
-            }
-            return min;
-        }
-    }
-
-    protected int RightBorder
-    {
-        get
-        {
-            int max = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                if (minoCoordinates[i, 0] > max)
-                    max = minoCoordinates[i, 0];
-            }
-            return max;
-        }
-    }
-    
-    protected int BottomBorder
-    {
-        get
-        {
-            int min = 9;
-            for (int i = 0; i < 4; i++)
-            {
-                if (minoCoordinates[i, 1] < min)
-                    min = minoCoordinates[i, 1];
-            }
-            return min;
-        }
-    }*/
 
     private void Update()
     {
@@ -159,7 +117,7 @@ public abstract class Tetrimino : MonoBehaviour
     {
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = GetDropSpot();
-        matrix.ShowBlocks(minoCoordinates);
+        matrix.ShowTetriminoBlocks(minoCoordinates);
         gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
     public void Lock()
@@ -176,6 +134,50 @@ public abstract class Tetrimino : MonoBehaviour
     /// <param name="r">Orientation</param>
     /// <param name="p">minoCoordinates of Mino No.0</param>
     /// <returns>matrix position of all Minos, including Mino No.0 </returns>
-    public abstract MatCoor[] GetMinoPos(RotationState r, MatCoor p);
-    public abstract void Rotate(bool isClockwise);
+    public MatCoor[] GetMinoPos(RotationState r, MatCoor p)
+    {
+        return null;
+    }
+    public void Rotate(bool isClockwise)
+    {
+        RotationState newOrientation = orientation;
+        Dictionary<RotationState, MatCoor[]> offsetData = Data.GetOffsetData(type);
+        MatCoor offset;
+        MatCoor[] tempCoor = new MatCoor[4];
+        bool doInterfere = false;
+
+        matrix.ClearBlocks(minoCoordinates);
+        newOrientation += isClockwise ? 1 : -1;
+        if (newOrientation > RotationState.west)
+            newOrientation = RotationState.north;
+        else if (newOrientation < RotationState.north)
+            newOrientation = RotationState.west;
+
+        for (int i = 0; i < offsetData[newOrientation].Length; i++)
+        {
+            offset = offsetData[orientation][i] - offsetData[newOrientation][i];
+            doInterfere = false;
+            for (int j = 0; j < 4; j++)
+            {
+                tempCoor[j] = (minoCoordinates[j] - minoCoordinates[rotationCenter]).Rotate90(isClockwise) + minoCoordinates[rotationCenter] + offset;
+                doInterfere = !matrix.JudgeAvailability(tempCoor[j]);
+                //not working, not this offset, keep looking
+                if (doInterfere) break;
+            }
+            //got it, CAN rotate, update EVERYTHING!
+            if (!doInterfere)
+            {
+                orientation = newOrientation;
+                minoCoordinates = tempCoor;
+                matrix.ShowTetriminoBlocks(minoCoordinates);
+                return;
+            }
+        }
+        //cannot rotate, not this time, show the old Tetrimino
+        if (doInterfere)
+        {
+            matrix.ShowTetriminoBlocks(minoCoordinates);
+        }
+        return;
+    }
 }
