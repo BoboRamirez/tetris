@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner
+public class Spawner : MonoBehaviour
 {
     private System.Random rand = new((int)System.DateTime.Now.Ticks);
     /// <summary>
     /// incoming tetrimino gameObjects, in the order of OITLJSZ
     /// </summary>
     [SerializeField]
-    private GameObject[] tetriminoInstances;
+    private GameObject tetriminoControl;
     /// <summary>
     /// all types in order, shuffled later
     /// </summary>
@@ -17,19 +17,21 @@ public class Spawner
     /// <summary>
     /// mapping from tetriminoType to gameObject
     /// </summary>
-    Dictionary<TetriminoType, GameObject> instanceMap = new Dictionary<TetriminoType, GameObject>();
+    //Dictionary<TetriminoType, GameObject> instanceMap = new Dictionary<TetriminoType, GameObject>();
+    private Tetrimino tetrimino;
     /// <summary>
     /// No. of Tetrimino to spawn in the types2Spawn
     /// </summary>
     private int cur;
-    public Spawner()
+    private void Start()
     {
         int i = 0;
         foreach (var item in System.Enum.GetValues(typeof(TetriminoType)))
-            types2Spawn[i++] = (TetriminoType) item;
-        instanceMap = BuildTetriminoDictionary(types2Spawn, tetriminoInstances);
+            types2Spawn[i++] = (TetriminoType)item;
+        //instanceMap = BuildTetriminoDictionary(types2Spawn, tetriminoInstances);
         ShuffleSpawnList();
         cur = 0;
+        tetrimino = tetriminoControl.GetComponent<Tetrimino>();
     }
     /// <summary>
     /// shuffle types2Spawn and reset cur
@@ -52,18 +54,14 @@ public class Spawner
     /// </summary>
     public void Spawn(TetriminoType t)
     {
-        /*
-        if (cur >= Data.TetriminoCount)
-            throw new System.ArgumentOutOfRangeException("cur");*/
-        
-        Instantiate(instanceMap[t], new Vector2(Data.spawnLocation[t].x, Data.spawnLocation[t].y), Quaternion.identity);
+        tetrimino.InitializeTetrimino(t);
         cur++;
         if (cur >= Data.TetriminoCount)
             ShuffleSpawnList();
     }
 
 
-    private Dictionary<TetriminoType, GameObject> BuildTetriminoDictionary(TetriminoType[] tList, GameObject[] goList)
+    /*private Dictionary<TetriminoType, GameObject> BuildTetriminoDictionary(TetriminoType[] tList, GameObject[] goList)
     {
         var d = new Dictionary<TetriminoType, GameObject>();
         if (tList.Length != Data.TetriminoCount || goList.Length != Data.TetriminoCount)
@@ -73,7 +71,7 @@ public class Spawner
             d.Add(tList[i], goList[i]);
         }
         return d;
-    }
+    }*/
 
 
 }

@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Tetrimino : MonoBehaviour
 {
-    protected RotationState orientation = RotationState.north;
-    protected TetriminoType type = TetriminoType.O;
-    protected MatCoor[] minoCoordinates;
-    protected int rotationCenter = 0;
-    protected Dictionary<RotationState, MatCoor[]> rotationOffset;
-    protected float fallCounter = 0;
-    protected float lockTimer = 0.5f;
-    protected float FallDelay
+    public RotationState orientation = RotationState.north;
+    [SerializeField]
+    public TetriminoType type = TetriminoType.O;
+    public MatCoor[] minoCoordinates;
+    private int rotationCenter = 0;
+    private Dictionary<RotationState, MatCoor[]> rotationOffset;
+    private float fallCounter = 0;
+    private float lockTimer = 0.5f;
+    private float FallDelay
     {
         get
         {
@@ -36,7 +37,7 @@ public class Tetrimino : MonoBehaviour
         }
     }
 
-    protected void InitializeTetrimino(TetriminoType t)
+    public void InitializeTetrimino(TetriminoType t)
     {
         type = t;
         orientation = RotationState.north;
