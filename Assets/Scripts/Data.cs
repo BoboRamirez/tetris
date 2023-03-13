@@ -15,18 +15,17 @@ public static class Data
     /// </summary>
     public static int TetriminoCount = 7;
     /// <summary>
-    /// A map from tetrimino type to matrix location of mino No.0 of the corresponding type, when facing north, as spawned.
-    /// Location coordinate is the same in both Unity and Matrix
+    /// A map from tetrimino type to matrix location of minos of the corresponding type, when facing north, as spawned.
     /// </summary>
-    public static Dictionary<TetriminoType, MatCoor> spawnLocation = new()
+    public static Dictionary<TetriminoType, MatCoor[]> spawnLocation = new()
     {
-        {TetriminoType.O, new MatCoor(4, 20)},
-        {TetriminoType.I, new MatCoor(3, 20)},
-        {TetriminoType.T, new MatCoor(3, 20)},
-        {TetriminoType.L, new MatCoor(3, 20)},
-        {TetriminoType.J, new MatCoor(3, 20)},
-        {TetriminoType.S, new MatCoor(3, 20)},
-        {TetriminoType.Z, new MatCoor(3, 21)}
+        {TetriminoType.O, new MatCoor[] { new MatCoor(4, 20), new MatCoor(5, 20), new MatCoor(5, 21), new MatCoor(4, 21) } },
+        {TetriminoType.I, new MatCoor[] { new MatCoor(3, 20), new MatCoor(4, 20), new MatCoor(5, 20), new MatCoor(6, 20) } },
+        {TetriminoType.T, new MatCoor[] { new MatCoor(3, 20), new MatCoor(4, 21), new MatCoor(4, 20), new MatCoor(5, 20) } },
+        {TetriminoType.L, new MatCoor[] { new MatCoor(3, 20), new MatCoor(4, 20), new MatCoor(5, 20), new MatCoor(5, 21) } },
+        {TetriminoType.J, new MatCoor[] { new MatCoor(3, 20), new MatCoor(4, 20), new MatCoor(5, 20), new MatCoor(3, 21) } },
+        {TetriminoType.S, new MatCoor[] { new MatCoor(3, 20), new MatCoor(4, 20), new MatCoor(4, 21), new MatCoor(5, 21) } },
+        {TetriminoType.Z, new MatCoor[] { new MatCoor(3, 21), new MatCoor(4, 21), new MatCoor(4, 20), new MatCoor(5, 20) } },
     };
     public static Dictionary<TetriminoType, int> rotationCenterMap = new()
     {

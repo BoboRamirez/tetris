@@ -70,7 +70,7 @@ public class MatrixManager : MonoBehaviour
     /// </summary>
     /// <param name="c">Target Coordinate</param>
     /// <returns>Generated Mino</returns>
-    public GameObject GenerateMinos(MatCoor c)
+    private GameObject GenerateMinos(MatCoor c)
     {
         return Instantiate(mino, new Vector2(0.5f + c.x, 0.5f + c.y), Quaternion.identity);
     }
@@ -85,5 +85,18 @@ public class MatrixManager : MonoBehaviour
         if (c.x < 0 || c.x > 9 || c.y < 0 || c.y > 21 || minos[c.x, c.y].State != BlockState.available)
             isVacant = false;
         return isVacant;
+    }
+
+    public void LockTetriminoBlocks(MatCoor[] m)
+    {
+        if (m.Length != 4)
+        {
+            Debug.LogError("wrong coordinate array");
+            return;
+        }
+        foreach (MatCoor c in m)
+        {
+            minos[c.x, c.y].setState(BlockState.locked);
+        }
     }
 }

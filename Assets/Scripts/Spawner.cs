@@ -13,28 +13,28 @@ public class Spawner : MonoBehaviour
     /// <summary>
     /// all types in order, shuffled later
     /// </summary>
-    private TetriminoType[] types2Spawn = new TetriminoType[Data.TetriminoCount];
+    private TetriminoType[] spawnList = new TetriminoType[Data.TetriminoCount];
     /// <summary>
     /// mapping from tetriminoType to gameObject
     /// </summary>
     //Dictionary<TetriminoType, GameObject> instanceMap = new Dictionary<TetriminoType, GameObject>();
     private Tetrimino tetrimino;
     /// <summary>
-    /// No. of Tetrimino to spawn in the types2Spawn
+    /// No. of Tetrimino to spawn in the spawnList
     /// </summary>
     private int cur;
     private void Start()
     {
         int i = 0;
         foreach (var item in System.Enum.GetValues(typeof(TetriminoType)))
-            types2Spawn[i++] = (TetriminoType)item;
-        //instanceMap = BuildTetriminoDictionary(types2Spawn, tetriminoInstances);
+            spawnList[i++] = (TetriminoType)item;
+        //instanceMap = BuildTetriminoDictionary(spawnList, tetriminoInstances);
         ShuffleSpawnList();
         cur = 0;
         tetrimino = tetriminoControl.GetComponent<Tetrimino>();
     }
     /// <summary>
-    /// shuffle types2Spawn and reset cur
+    /// shuffle spawnList and reset cur
     /// </summary>
     public void ShuffleSpawnList()
     {
@@ -44,23 +44,21 @@ public class Spawner : MonoBehaviour
         while (n > 1)
         {
             k = rand.Next(n--);
-            tmp = types2Spawn[k];
-            types2Spawn[k] = types2Spawn[n];
-            types2Spawn[n] = tmp;
+            tmp = spawnList[k];
+            spawnList[k] = spawnList[n];
+            spawnList[n] = tmp;
         }
     }
     /// <summary>
     /// Spawn the next tetrimino on the list. If the list is ending, shuffle.
     /// </summary>
-    public void Spawn(TetriminoType t)
+    public void Spawn()
     {
-        tetrimino.InitializeTetrimino(t);
+        tetrimino.InitializeTetrimino(spawnList[cur]);
         cur++;
         if (cur >= Data.TetriminoCount)
             ShuffleSpawnList();
     }
-
-
     /*private Dictionary<TetriminoType, GameObject> BuildTetriminoDictionary(TetriminoType[] tList, GameObject[] goList)
     {
         var d = new Dictionary<TetriminoType, GameObject>();

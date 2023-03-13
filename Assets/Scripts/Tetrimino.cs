@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,21 +11,17 @@ public class Tetrimino : MonoBehaviour
     public MatCoor[] minoCoordinates;
     private int rotationCenter = 0;
     private Dictionary<RotationState, MatCoor[]> rotationOffset;
-    private float fallCounter = 0;
-    private float lockTimer = 0.5f;
-    private float FallDelay
-    {
-        get
-        {
-            return Data.fallDelay[GameManager.manager.difficulty];
-        }
-    }
     private readonly MatrixManager matrix = MatrixManager.manager;
+    private bool _isActive = false;
+    public bool IsActive
+    {
+        get { return _isActive; }
+    }
 
     private void Update()
     {
         //not even wrong!!!
-        if (fallCounter >= FallDelay)
+        /*if (fallCounter >= FallDelay)
         {
             fallCounter -= FallDelay;
             Fall();
@@ -34,16 +31,17 @@ public class Tetrimino : MonoBehaviour
         { 
             fallCounter += Time.deltaTime; 
             lockTimer -= Time.deltaTime;
-        }
+        }*/
     }
-
     public void InitializeTetrimino(TetriminoType t)
     {
         type = t;
         orientation = RotationState.north;
-        minoCoordinates = GetMinoPos(RotationState.north, Data.spawnLocation[type]);
+        minoCoordinates = Data.spawnLocation[type];
         rotationOffset = Data.GetOffsetData(t);
         rotationCenter = Data.rotationCenterMap[t];
+        matrix.ShowTetriminoBlocks(minoCoordinates);
+        _isActive = true;
     }
 
     /// <summary>
@@ -88,10 +86,7 @@ public class Tetrimino : MonoBehaviour
     public bool HasSpaceToFall()
     {
         for (int i = 0; i < 4; i++)
-            if (minoCoordinates[i].y - 1 < 0) 
-                return false;
-        for (int i = 0; i < 4; i++)
-            if (matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].State == BlockState.locked) 
+            if (minoCoordinates[i].y - 1 < 0 || matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].State == BlockState.locked)
                 return false;
         return true;
     }
@@ -105,39 +100,24 @@ public class Tetrimino : MonoBehaviour
             Debug.LogError("Nowhere to fall at Fall()");
             return;
         }
-        
-        for (int i = 0; i < 4; i++)
-            matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y].setState(BlockState.available);
-        for (int i = 0; i < 4; i++)
-            matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].setState((BlockState) i);
+        matrix.ClearBlocks(minoCoordinates);
         for (int i = 0; i < 4; i++)
             minoCoordinates[i].y--;
-        gameObject.transform.position -= Vector3.down;
+        matrix.ShowTetriminoBlocks(minoCoordinates);
     }
     public void HardDrop()
     {
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = GetDropSpot();
         matrix.ShowTetriminoBlocks(minoCoordinates);
-        gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
+        //gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
+    //need further attention
     public void Lock()
     {
-        foreach (var block in minoCoordinates)
-        {
-            matrix.minos[block.x, block.y].setState(BlockState.locked);
-        }
-        
-    }
-    /// <summary>
-    /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0
-    /// </summary>
-    /// <param name="r">Orientation</param>
-    /// <param name="p">minoCoordinates of Mino No.0</param>
-    /// <returns>matrix position of all Minos, including Mino No.0 </returns>
-    public MatCoor[] GetMinoPos(RotationState r, MatCoor p)
-    {
-        return null;
+        _isActive = false;
+        matrix.LockTetriminoBlocks(minoCoordinates);
+        //should spawn next, or see if game is over?
     }
     public void Rotate(bool isClockwise)
     {
@@ -180,5 +160,15 @@ public class Tetrimino : MonoBehaviour
             matrix.ShowTetriminoBlocks(minoCoordinates);
         }
         return;
+    }
+    /// <summary>
+    /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0
+    /// </summary>
+    /// <param name="r">Orientation</param>
+    /// <param name="p">minoCoordinates of Mino No.0</param>
+    /// <returns>matrix position of all Minos, including Mino No.0 </returns>
+    public MatCoor[] GetMinoPos(RotationState r, MatCoor p)
+    {
+        return null;
     }
 }
