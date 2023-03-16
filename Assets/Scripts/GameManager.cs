@@ -1,14 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager manager;
     public int difficulty = 1;
     public GameState state = GameState.defaultPhase;
-    private float fallCounter = 0;
-    private float lockTimer = 0.5f;
+    /*private float fallCounter = 0;
+    private float lockTimer = 0.5f;*/
     [SerializeField]
     private GameObject tetriminoGO;
     private Tetrimino tetrimino;
@@ -40,7 +42,7 @@ public class GameManager : MonoBehaviour
         MatrixManager.manager.InitializeMatrix();
         tetrimino = tetriminoGO.GetComponent<Tetrimino>();
         spawner = spawnerGO.GetComponent<Spawner>();
-
+        spawner.Spawn();
     }
 
     // Update is called once per frame
@@ -48,6 +50,26 @@ public class GameManager : MonoBehaviour
     {
         
     }
+    
+    public void MoveLeft(InputAction.CallbackContext context)
+    {
+        if (!tetrimino.IsActive) 
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                tetrimino.Move(true);
+                Console.WriteLine("start");
+            }
+            else if (context.phase == InputActionPhase.Performed)
+            {
+                Console.WriteLine("perforemd");
 
+            }
+            else if (context.phase == InputActionPhase.Canceled)
+            {
+                Console.WriteLine("canceled");
+            }
+        }
+    }
     
 }

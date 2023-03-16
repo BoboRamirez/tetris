@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,11 +12,17 @@ public class Tetrimino : MonoBehaviour
     public MatCoor[] minoCoordinates;
     private int rotationCenter = 0;
     private Dictionary<RotationState, MatCoor[]> rotationOffset;
-    private readonly MatrixManager matrix = MatrixManager.manager;
+    private MatrixManager matrix;
     private bool _isActive = false;
     public bool IsActive
     {
         get { return _isActive; }
+    }
+
+    private void Start()
+    {
+        matrix = MatrixManager.manager;
+        Console.WriteLine(matrix.ToString());
     }
 
     private void Update()
@@ -83,6 +90,7 @@ public class Tetrimino : MonoBehaviour
             new MatCoor(minoCoordinates[3], 0, -dropDepth),
         };
     }
+    //not sure if necessarry...
     public bool HasSpaceToFall()
     {
         for (int i = 0; i < 4; i++)
@@ -160,6 +168,32 @@ public class Tetrimino : MonoBehaviour
             matrix.ShowTetriminoBlocks(minoCoordinates);
         }
         return;
+    }
+
+    public void Move(bool isLeft)
+    {
+        MatCoor[] newCoor = new MatCoor[4];
+        if (isLeft)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (minoCoordinates[i].x <= 0 || matrix.minos[minoCoordinates[i].x - 1, minoCoordinates[i].y].State == BlockState.locked)
+                    return;
+                newCoor[i] = new MatCoor(minoCoordinates[i], -1, 0);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (minoCoordinates[i].x >= 19 || matrix.minos[minoCoordinates[i].x + 1, minoCoordinates[i].y].State == BlockState.locked)
+                    return;
+                newCoor[i] = new MatCoor(minoCoordinates[i], 1, 0);
+            }
+        }
+        matrix.ClearBlocks(minoCoordinates);
+        minoCoordinates = newCoor;
+        matrix.ShowTetriminoBlocks(minoCoordinates);
     }
     /// <summary>
     /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0

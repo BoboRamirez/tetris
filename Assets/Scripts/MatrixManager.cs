@@ -7,7 +7,7 @@ public class MatrixManager : MonoBehaviour
     public static MatrixManager manager;
     [SerializeField]
     private GameObject mino;
-    public Mino[,] minos = new Mino[10, 20];
+    public Mino[,] minos = new Mino[10, 22];
     private GameObject tempMino;
 
     private void Awake()
