@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "TestSpawn",
+                    "type": "Button",
+                    "id": "dd183a69-d925-49e8-9131-da7dccbe94ed",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -65,7 +74,7 @@
                     "name": "",
                     "id": "d45260b6-a8c1-408e-8bac-f36022c2cce7",
                     "path": "<Keyboard>/a",
-                    "interactions": "Press,Hold",
+                    "interactions": "Hold(duration=0.5,pressPoint=0.3)",
                     "processors": "",
                     "groups": "",
                     "action": "MoveLeft",
@@ -76,7 +85,7 @@
                     "name": "",
                     "id": "5c00ffcd-56e8-4a2a-a4ff-c4a0cf7c4379",
                     "path": "<Keyboard>/d",
-                    "interactions": "Press,Hold",
+                    "interactions": "Hold(duration=0.5,pressPoint=0.3)",
                     "processors": "",
                     "groups": "",
                     "action": "MoveRight",
@@ -87,7 +96,7 @@
                     "name": "",
                     "id": "18088d41-860e-4780-a120-0c978da0d8f3",
                     "path": "<Keyboard>/rightArrow",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "RotateClockwise",
@@ -98,7 +107,7 @@
                     "name": "",
                     "id": "6e208045-e7c5-430c-a09f-67284f35348d",
                     "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "RotateCounterClockwise",
@@ -124,6 +133,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HardDrop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6415e70-04ec-4179-b7b7-a565359f2170",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TestSpawn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager manager;
     public int difficulty = 1;
     public GameState state = GameState.defaultPhase;
-    /*private float fallCounter = 0;
-    private float lockTimer = 0.5f;*/
+    private float fallCounter = 0;
+    //private float lockTimer = 0.5f;
     [SerializeField]
     private GameObject tetriminoGO;
     private Tetrimino tetrimino;
@@ -42,34 +42,89 @@ public class GameManager : MonoBehaviour
         MatrixManager.manager.InitializeMatrix();
         tetrimino = tetriminoGO.GetComponent<Tetrimino>();
         spawner = spawnerGO.GetComponent<Spawner>();
-        spawner.Spawn();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (tetrimino.IsActive)
+        {
+            if (fallCounter >= Data.fallDelay[difficulty])
+            {
+                fallCounter -= Data.fallDelay[difficulty];
+                tetrimino.Fall();
+            }
+            else
+                fallCounter += Time.deltaTime;
+        }
     }
     
     public void MoveLeft(InputAction.CallbackContext context)
     {
-        if (!tetrimino.IsActive) 
+        if (tetrimino.IsActive)
         {
             if (context.phase == InputActionPhase.Started)
             {
                 tetrimino.Move(true);
-                Console.WriteLine("start");
+               // Debug.Log("start");
             }
             else if (context.phase == InputActionPhase.Performed)
             {
-                Console.WriteLine("perforemd");
-
-            }
-            else if (context.phase == InputActionPhase.Canceled)
-            {
-                Console.WriteLine("canceled");
+                StartCoroutine(RepeatMoving(true, context));
+                //Debug.Log("performed");
             }
         }
     }
-    
+
+    public void MoveRight(InputAction.CallbackContext context)
+    {
+        if (tetrimino.IsActive)
+        {
+            if (context.phase == InputActionPhase.Started)
+            {
+                //Debug.Log("start");
+                tetrimino.Move(false);
+            }
+            else if (context.phase == InputActionPhase.Performed)
+            {
+               // Debug.Log("performed");
+                StartCoroutine(RepeatMoving(false, context));
+            }
+        }
+    }
+
+    private IEnumerator RepeatMoving(bool isLeft, InputAction.CallbackContext context)
+    {
+        while (context.phase == InputActionPhase.Performed)
+        {
+            tetrimino.Move(isLeft);
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield break;
+    }
+
+    public void RotateClockwise(InputAction.CallbackContext context)
+    {
+        if (tetrimino.IsActive && context.phase == InputActionPhase.Started)
+        {
+            tetrimino.Rotate(true);
+        }
+    }
+
+    public void RotateCounterClockwise(InputAction.CallbackContext context)
+    {
+        if (tetrimino.IsActive && context.phase == InputActionPhase.Started)
+        {
+            tetrimino.Rotate(false);
+        }
+    }
+
+    public void SpawnTetrimino(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            spawner.Spawn();
+            Debug.Log(tetrimino.IsActive);
+        }
+    }
 }

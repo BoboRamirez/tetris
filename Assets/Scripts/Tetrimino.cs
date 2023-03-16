@@ -186,7 +186,7 @@ public class Tetrimino : MonoBehaviour
         {
             for (int i = 0; i < 4; i++)
             {
-                if (minoCoordinates[i].x >= 19 || matrix.minos[minoCoordinates[i].x + 1, minoCoordinates[i].y].State == BlockState.locked)
+                if (minoCoordinates[i].x >= 9 || matrix.minos[minoCoordinates[i].x + 1, minoCoordinates[i].y].State == BlockState.locked)
                     return;
                 newCoor[i] = new MatCoor(minoCoordinates[i], 1, 0);
             }
