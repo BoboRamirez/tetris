@@ -640,6 +640,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1ed914d5d2372e04fbc81a9bf42b68c4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1ed914d5d2372e04fbc81a9bf42b68c4, type: 3}
       propertyPath: m_TagString
       value: Background
       objectReference: {fileID: 0}

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public int difficulty = 1;
     public GameState state = GameState.defaultPhase;
     private float fallCounter = 0;
-    //private float lockTimer = 0.5f;
+    private float lockTimer = 0.5f;
     [SerializeField]
     private GameObject tetriminoGO;
     private Tetrimino tetrimino;
@@ -99,6 +99,25 @@ public class GameManager : MonoBehaviour
         {
             tetrimino.Move(isLeft);
             yield return new WaitForSeconds(0.1f);
+        }
+        yield break;
+    }
+
+    public void SoftDrop(InputAction.CallbackContext context)
+    {
+        if (tetrimino.IsActive)
+        {
+            if (context.phase == InputActionPhase.Performed)
+                StartCoroutine(RepeatFalling(context));
+        }
+    }
+
+    private IEnumerator RepeatFalling(InputAction.CallbackContext context)
+    {
+        while (context.phase == InputActionPhase.Performed)
+        {
+            tetrimino.Fall();
+            yield return new WaitForSeconds(Data.fallDelay[difficulty] / 20);
         }
         yield break;
     }
