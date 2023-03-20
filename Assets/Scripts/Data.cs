@@ -14,6 +14,8 @@ public static class Data
     /// just in case I wanna add more Tetriminos, like a bomb or sth.
     /// </summary>
     public static int TetriminoCount = 7;
+
+    public static float defaultLockTime = 0.5f;
     /// <summary>
     /// A map from tetrimino type to matrix location of minos of the corresponding type, when facing north, as spawned.
     /// </summary>

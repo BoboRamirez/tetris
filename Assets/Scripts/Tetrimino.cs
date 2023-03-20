@@ -18,6 +18,14 @@ public class Tetrimino : MonoBehaviour
     {
         get { return _isActive; }
     }
+    private float _lockTimer = Data.defaultLockTime;
+    public float LockTimer
+    {
+        get
+        {
+            return _lockTimer;
+        }
+    }
 
     private void Start()
     {
@@ -49,6 +57,7 @@ public class Tetrimino : MonoBehaviour
         rotationCenter = Data.rotationCenterMap[t];
         matrix.ShowTetriminoBlocks(minoCoordinates);
         _isActive = true;
+        _lockTimer = Data.defaultLockTime;
     }
 
     /// <summary>
@@ -112,18 +121,21 @@ public class Tetrimino : MonoBehaviour
         for (int i = 0; i < 4; i++)
             minoCoordinates[i].y--;
         matrix.ShowTetriminoBlocks(minoCoordinates);
+        _lockTimer = Data.defaultLockTime;
     }
     public void HardDrop()
     {
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = GetDropSpot();
         matrix.ShowTetriminoBlocks(minoCoordinates);
+        Lock();
         //gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
     //need further attention
     public void Lock()
     {
         _isActive = false;
+        _lockTimer = Data.defaultLockTime;
         matrix.LockTetriminoBlocks(minoCoordinates);
         //should spawn next, or see if game is over?
     }
@@ -159,6 +171,7 @@ public class Tetrimino : MonoBehaviour
                 orientation = newOrientation;
                 minoCoordinates = tempCoor;
                 matrix.ShowTetriminoBlocks(minoCoordinates);
+                _lockTimer = Data.defaultLockTime;
                 return;
             }
         }
@@ -194,6 +207,7 @@ public class Tetrimino : MonoBehaviour
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = newCoor;
         matrix.ShowTetriminoBlocks(minoCoordinates);
+        _lockTimer = Data.defaultLockTime;
     }
     /// <summary>
     /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0
@@ -204,5 +218,10 @@ public class Tetrimino : MonoBehaviour
     public MatCoor[] GetMinoPos(RotationState r, MatCoor p)
     {
         return null;
+    }
+
+    public void LockTimerCountDown()
+    {
+         _lockTimer -= Time.deltaTime;
     }
 }

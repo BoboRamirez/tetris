@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public int difficulty = 1;
     public GameState state = GameState.defaultPhase;
     private float fallCounter = 0;
-    private float lockTimer = 0.5f;
     [SerializeField]
     private GameObject tetriminoGO;
     private Tetrimino tetrimino;
@@ -49,6 +48,15 @@ public class GameManager : MonoBehaviour
     {
         if (tetrimino.IsActive)
         {
+            if (tetrimino.LockTimer <= 0)
+            {
+                tetrimino.Lock();
+            }
+            else
+            {
+                tetrimino.LockTimerCountDown();
+            }
+
             if (fallCounter >= Data.fallDelay[difficulty])
             {
                 fallCounter -= Data.fallDelay[difficulty];
@@ -56,6 +64,7 @@ public class GameManager : MonoBehaviour
             }
             else
                 fallCounter += Time.deltaTime;
+            
         }
     }
     
@@ -138,12 +147,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
+
     public void SpawnTetrimino(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
         {
             spawner.Spawn();
-            Debug.Log(tetrimino.IsActive);
+            //Debug.Log(tetrimino.IsActive);
         }
     }
 }
