@@ -9,7 +9,7 @@ public class Tetrimino : MonoBehaviour
     public RotationState orientation = RotationState.north;
     [SerializeField]
     public TetriminoType type = TetriminoType.O;
-    public MatCoor[] minoCoordinates;
+    public MatCoor[] minoCoordinates = new MatCoor[4];
     private int rotationCenter = 0;
     private Dictionary<RotationState, MatCoor[]> rotationOffset;
     private MatrixManager matrix;
@@ -21,10 +21,12 @@ public class Tetrimino : MonoBehaviour
     private float _lockTimer = Data.defaultLockTime;
     public float LockTimer
     {
-        get
-        {
-            return _lockTimer;
-        }
+        get => _lockTimer;
+    }
+    private int _operationCounter = 15;
+    public int OperationCounter
+    {
+        get => _operationCounter;
     }
 
     private void Start()
@@ -114,7 +116,7 @@ public class Tetrimino : MonoBehaviour
     {
         if (!HasSpaceToFall())
         {
-            Debug.LogError("Nowhere to fall at Fall()");
+            //Debug.LogError("Nowhere to fall at Fall()");
             return;
         }
         matrix.ClearBlocks(minoCoordinates);
@@ -128,16 +130,17 @@ public class Tetrimino : MonoBehaviour
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = GetDropSpot();
         matrix.ShowTetriminoBlocks(minoCoordinates);
-        Lock();
         //gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
     //need further attention
     public void Lock()
     {
+        //Debug.LogWarning("locked!");
         _isActive = false;
         _lockTimer = Data.defaultLockTime;
         matrix.LockTetriminoBlocks(minoCoordinates);
         //should spawn next, or see if game is over?
+        
     }
     public void Rotate(bool isClockwise)
     {

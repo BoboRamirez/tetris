@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
             {
                 tetrimino.Lock();
             }
-            else
+            else if (!tetrimino.HasSpaceToFall())
             {
                 tetrimino.LockTimerCountDown();
             }
@@ -70,12 +70,13 @@ public class GameManager : MonoBehaviour
     
     public void MoveLeft(InputAction.CallbackContext context)
     {
-        if (tetrimino.IsActive)
+/*        Debug.Log(tetrimino.IsActive);
+*/        if (tetrimino.IsActive)
         {
             if (context.phase == InputActionPhase.Started)
             {
                 tetrimino.Move(true);
-               // Debug.Log("start");
+                //Debug.Log("start");
             }
             else if (context.phase == InputActionPhase.Performed)
             {
@@ -87,6 +88,7 @@ public class GameManager : MonoBehaviour
 
     public void MoveRight(InputAction.CallbackContext context)
     {
+     /*   Debug.Log(tetrimino.IsActive);*/
         if (tetrimino.IsActive)
         {
             if (context.phase == InputActionPhase.Started)
@@ -100,11 +102,12 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(RepeatMoving(false, context));
             }
         }
+
     }
 
     private IEnumerator RepeatMoving(bool isLeft, InputAction.CallbackContext context)
     {
-        while (context.phase == InputActionPhase.Performed)
+        while (tetrimino.IsActive && context.phase == InputActionPhase.Performed)
         {
             tetrimino.Move(isLeft);
             yield return new WaitForSeconds(0.1f);
@@ -123,7 +126,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RepeatFalling(InputAction.CallbackContext context)
     {
-        while (context.phase == InputActionPhase.Performed)
+        while (tetrimino.IsActive && context.phase == InputActionPhase.Performed)
         {
             tetrimino.Fall();
             yield return new WaitForSeconds(Data.fallDelay[difficulty] / 20);
@@ -147,14 +150,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    public void HardDrop(InputAction.CallbackContext context)
+    {
+        if (tetrimino.IsActive && context.phase == InputActionPhase.Performed)
+        {
+            tetrimino.HardDrop();
+            tetrimino.Lock();
+        }
+    }
 
     public void SpawnTetrimino(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        //Debug.Log(tetrimino.IsActive);
+
+        if (!tetrimino.IsActive && context.phase == InputActionPhase.Performed)
         {
             spawner.Spawn();
-            //Debug.Log(tetrimino.IsActive);
         }
     }
 }

@@ -30,7 +30,6 @@ public class Spawner : MonoBehaviour
             spawnList[i++] = (TetriminoType)item;
         //instanceMap = BuildTetriminoDictionary(spawnList, tetriminoInstances);
         ShuffleSpawnList();
-        cur = 0;
         tetrimino = tetriminoControl.GetComponent<Tetrimino>();
     }
     /// <summary>
@@ -55,6 +54,7 @@ public class Spawner : MonoBehaviour
     public void Spawn()
     {
         tetrimino.InitializeTetrimino(spawnList[cur]);
+        Debug.Log(spawnList[cur]);
         cur++;
         if (cur >= Data.TetriminoCount)
             ShuffleSpawnList();
