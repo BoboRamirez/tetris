@@ -17,7 +17,7 @@ public class Mino : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = false;
     }
-    public void setState(BlockState s)
+    public void SetState(BlockState s)
     {
         _state = s;
         //will have different sprite colors for them later.

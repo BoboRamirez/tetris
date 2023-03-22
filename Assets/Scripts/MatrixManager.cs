@@ -38,7 +38,7 @@ public class MatrixManager : MonoBehaviour
     public void ClearBlocks(MatCoor[] m)
     {
         foreach(MatCoor c in m)
-            minos[c.x, c.y].setState(BlockState.available);
+            minos[c.x, c.y].SetState(BlockState.available);
         return;
     }
     /// <summary>
@@ -58,7 +58,7 @@ public class MatrixManager : MonoBehaviour
         {
             if (minos[m[i].x, m[i].y].State == BlockState.available)
             {
-                minos[m[i].x, m[i].y].setState((BlockState) i);
+                minos[m[i].x, m[i].y].SetState((BlockState) i);
             }
             else
                 Debug.LogError($"Wrong coordinate: ({m[i].x}:{m[i].y}) already occupied");
@@ -96,7 +96,7 @@ public class MatrixManager : MonoBehaviour
         }
         foreach (MatCoor c in m)
         {
-            minos[c.x, c.y].setState(BlockState.locked);
+            minos[c.x, c.y].SetState(BlockState.locked);
         }
     }
 
@@ -115,9 +115,13 @@ public class MatrixManager : MonoBehaviour
                 streak++;
                 for (x = 0; x < 10; x++)
                 {
-                    minos[x, y].setState(BlockState.matched);
+                    minos[x, y].SetState(BlockState.matched);
                 }
             }
         }
+    }
+    public void Eliminate()
+    {
+
     }
 }
