@@ -7,17 +7,19 @@ public static class Data
     /// <summary>
     /// fallSpeed @ sec/line
     /// </summary>
-    public static float[] fallDelay = 
+    public readonly static float[] fallDelay = 
         { 0f, 1.0f, 0.793f, 0.618f, 0.473f, 0.355f, 0.262f, 0.190f, 0.135f,
         0.094f, 0.064f, 0.043f, 0.028f, 0.018f, 0.011f, 0.007f };
     /// <summary>
     /// just in case I wanna add more Tetriminos, like a bomb or sth.
     /// </summary>
-    public static int TetriminoCount = 7;
+    public readonly static int TetriminoCount = 7;
 
-    public static float defaultLockTime = 0.5f;
+    public readonly static float defaultLockTime = 0.5f;
     /// <summary>
     /// A map from tetrimino type to matrix location of minos of the corresponding type, when facing north, as spawned.
+    /// /*maybe it's better to make it a function, so everytime it is called, it creates an different instance to prevent unexpected changes*/
+    /// nah, we either deep clone, or we use function
     /// </summary>
     public static Dictionary<TetriminoType, MatCoor[]> spawnLocation = new()
     {
@@ -121,7 +123,7 @@ public static class Data
     }*/
 }
 
-public class MatCoor
+public struct MatCoor
 {
     public int x;
     public int y;
@@ -181,7 +183,8 @@ public enum BlockState
     active2,
     active3,
     available,
-    locked
+    locked,
+    matched,
 }
 /// <summary>
 /// _state of the game

@@ -28,38 +28,37 @@ public class Tetrimino : MonoBehaviour
     {
         get => _operationCounter;
     }
+    private int _diveDepth;
+    private int CurDepth
+    {
+        get 
+        {
+            int min = 30;
+            foreach (MatCoor c in minoCoordinates)
+            {
+                if (c.y < min) min = c.y;
+            }
+            return min;
+        }
+    }
 
     private void Start()
     {
         matrix = MatrixManager.manager;
         Console.WriteLine(matrix.ToString());
     }
-
-    private void Update()
-    {
-        //not even wrong!!!
-        /*if (fallCounter >= FallDelay)
-        {
-            fallCounter -= FallDelay;
-            Fall();
-            lockTimer = .5f;
-        }
-        else
-        { 
-            fallCounter += Time.deltaTime; 
-            lockTimer -= Time.deltaTime;
-        }*/
-    }
     public void InitializeTetrimino(TetriminoType t)
     {
         type = t;
         orientation = RotationState.north;
-        minoCoordinates = Data.spawnLocation[type];
+        Data.spawnLocation[type].CopyTo(minoCoordinates, 0);
         rotationOffset = Data.GetOffsetData(t);
         rotationCenter = Data.rotationCenterMap[t];
         matrix.ShowTetriminoBlocks(minoCoordinates);
         _isActive = true;
         _lockTimer = Data.defaultLockTime;
+        _operationCounter = 15;
+        _diveDepth = 30;
     }
 
     /// <summary>
@@ -123,7 +122,13 @@ public class Tetrimino : MonoBehaviour
         for (int i = 0; i < 4; i++)
             minoCoordinates[i].y--;
         matrix.ShowTetriminoBlocks(minoCoordinates);
+        //post-fall process
         _lockTimer = Data.defaultLockTime;
+        if (CurDepth < _diveDepth)
+        {
+            _operationCounter = 15;
+            _diveDepth = CurDepth;
+        }
     }
     public void HardDrop()
     {
@@ -175,6 +180,7 @@ public class Tetrimino : MonoBehaviour
                 minoCoordinates = tempCoor;
                 matrix.ShowTetriminoBlocks(minoCoordinates);
                 _lockTimer = Data.defaultLockTime;
+                _operationCounter--;
                 return;
             }
         }
@@ -211,6 +217,7 @@ public class Tetrimino : MonoBehaviour
         minoCoordinates = newCoor;
         matrix.ShowTetriminoBlocks(minoCoordinates);
         _lockTimer = Data.defaultLockTime;
+        _operationCounter--;
     }
     /// <summary>
     /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0

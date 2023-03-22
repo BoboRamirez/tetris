@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     {
         if (tetrimino.IsActive)
         {
-            if (tetrimino.LockTimer <= 0)
+            if (tetrimino.LockTimer <= 0 || tetrimino.OperationCounter <= 0)
             {
                 tetrimino.Lock();
             }
@@ -64,7 +64,11 @@ public class GameManager : MonoBehaviour
             }
             else
                 fallCounter += Time.deltaTime;
-            
+        }
+        else
+        {
+            //pattern match && eliminate
+            spawner.Spawn();
         }
     }
     

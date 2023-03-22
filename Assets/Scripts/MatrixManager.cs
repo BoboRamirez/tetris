@@ -99,4 +99,25 @@ public class MatrixManager : MonoBehaviour
             minos[c.x, c.y].setState(BlockState.locked);
         }
     }
+
+    public void MatchPattern()
+    {
+        int x, y, streak = 0;
+        for (y = 0; y <20; y++)
+        {
+            for (x = 0; x < 10;  x++)
+            {
+                if (minos[x, y].State != BlockState.locked)
+                    break;
+            }
+            if (x >= 10)
+            {
+                streak++;
+                for (x = 0; x < 10; x++)
+                {
+                    minos[x, y].setState(BlockState.matched);
+                }
+            }
+        }
+    }
 }
