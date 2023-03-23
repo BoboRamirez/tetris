@@ -50,7 +50,10 @@ public class GameManager : MonoBehaviour
         {
             if (tetrimino.LockTimer <= 0 || tetrimino.OperationCounter <= 0)
             {
-                tetrimino.Lock();
+                if (!tetrimino.Lock())
+                {
+                    ExceedRootGameOver();
+                }
             }
             else if (!tetrimino.HasSpaceToFall())
             {
@@ -67,7 +70,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //pattern match && eliminate
             spawner.Spawn();
         }
     }
@@ -159,7 +161,8 @@ public class GameManager : MonoBehaviour
         if (tetrimino.IsActive && context.phase == InputActionPhase.Performed)
         {
             tetrimino.HardDrop();
-            tetrimino.Lock();
+            if (!tetrimino.Lock())
+                ExceedRootGameOver();
         }
     }
 
@@ -171,5 +174,10 @@ public class GameManager : MonoBehaviour
         {
             spawner.Spawn();
         }
+    }
+
+    public void ExceedRootGameOver()
+    {
+        return;
     }
 }

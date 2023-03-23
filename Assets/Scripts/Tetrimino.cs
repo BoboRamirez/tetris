@@ -60,38 +60,26 @@ public class Tetrimino : MonoBehaviour
         _operationCounter = 15;
         _diveDepth = 30;
     }
-
     /// <summary>
     /// get matrix location of drop spot, or ghost piece,  of current tetrimino
     /// </summary>
     /// <returns>location of all 4 minoCoordinates in matrix</returns>
     public MatCoor[] GetDropSpot()
     {
-
-        BlockState below;
-        List<int> bottomList = new();
-        int dropDepth = 0;
+        int dropDepth;
         bool doesHit = false;
-        for (int i = 0; i < 4; i++)
-            if (minoCoordinates[i].y - 1 < 0) return minoCoordinates;
-        for (int i = 0; i < 4; i++)
-        {
-            below = matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - 1].State;
-            if (below < BlockState.active3) continue;
-            else if (below == BlockState.locked) return minoCoordinates;
-            else bottomList.Add(i);
-        }
-
+        dropDepth = -1;
         while (!doesHit)
         {
-            foreach (int i in bottomList)
+            dropDepth++;
+            foreach (MatCoor c in minoCoordinates)
             {
-                dropDepth++;
-                if (minoCoordinates[i].y - dropDepth - 1 < 0 || matrix.minos[minoCoordinates[i].x, minoCoordinates[i].y - dropDepth - 1].State == BlockState.locked)
-                    doesHit = true;
+                if (c.y - dropDepth -1 < 0 || matrix.minos[c.x, c.y - dropDepth - 1].State == BlockState.locked)
+                {
+                    doesHit = true; break;
+                }
             }
         }
-
         return new MatCoor[]
         {
             new MatCoor(minoCoordinates[0], 0, -dropDepth),
@@ -100,7 +88,6 @@ public class Tetrimino : MonoBehaviour
             new MatCoor(minoCoordinates[3], 0, -dropDepth),
         };
     }
-    //not sure if necessarry...
     public bool HasSpaceToFall()
     {
         for (int i = 0; i < 4; i++)
@@ -132,20 +119,32 @@ public class Tetrimino : MonoBehaviour
     }
     public void HardDrop()
     {
+        /*Debug.Log("on HardDrop:");
+        PrintMinoCoordinates();*/
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = GetDropSpot();
+/*        Debug.Log("drop Spot:");
+        PrintMinoCoordinates();*/
         matrix.ShowTetriminoBlocks(minoCoordinates);
         //gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
-    //need further attention
-    public void Lock()
+    /// <summary>
+    /// lock the current tetrimino. if true, then check for elimination and game continues; else, that means some mino went wild in this tetrimino and game over
+    /// </summary>
+    /// <returns>if game continues</returns>
+    public bool Lock()
     {
+        bool doseContinue;
         //Debug.LogWarning("locked!");
         _isActive = false;
         _lockTimer = Data.defaultLockTime;
-        matrix.LockTetriminoBlocks(minoCoordinates);
-        //should spawn next, or see if game is over?
-        
+        _operationCounter = 15;
+        doseContinue = matrix.LockTetriminoBlocks(minoCoordinates);
+        if (doseContinue) 
+        {
+            matrix.MatchPatternAndEliminate();
+        }
+        return doseContinue;
     }
     public void Rotate(bool isClockwise)
     {
@@ -225,13 +224,13 @@ public class Tetrimino : MonoBehaviour
     /// <param name="r">Orientation</param>
     /// <param name="p">minoCoordinates of Mino No.0</param>
     /// <returns>matrix position of all Minos, including Mino No.0 </returns>
-    public MatCoor[] GetMinoPos(RotationState r, MatCoor p)
-    {
-        return null;
-    }
-
     public void LockTimerCountDown()
     {
          _lockTimer -= Time.deltaTime;
+    }
+    public void PrintMinoCoordinates()
+    {
+        foreach (MatCoor c in minoCoordinates)
+            Debug.Log(c);
     }
 }
