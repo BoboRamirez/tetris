@@ -87,23 +87,35 @@ public class MatrixManager : MonoBehaviour
         return isVacant;
     }
 
-    public void LockTetriminoBlocks(MatCoor[] m)
+    public bool LockTetriminoBlocks(MatCoor[] m)
     {
         if (m.Length != 4)
         {
             Debug.LogError("wrong coordinate array");
-            return;
+            return false;
         }
         foreach (MatCoor c in m)
         {
+            if (c.x < 0 || c.x >= 10 || c.y < 0)
+            {
+                Debug.LogError($"invalid lock coodinidate: {c}");
+                return false;
+            }
+            //out of bound, game over
+            else if (c.y >= 20)
+            {
+                return false;
+            }
             minos[c.x, c.y].SetState(BlockState.locked);
         }
+        return true;
     }
 
-    public void MatchPattern()
+    public void MatchPatternAndEliminate()
     {
-        int x, y, streak = 0;
-        for (y = 0; y <20; y++)
+        int x;
+        List<int> eliminateList = new();
+        for (int y = 0; y <20; y++)
         {
             for (x = 0; x < 10;  x++)
             {
@@ -112,16 +124,14 @@ public class MatrixManager : MonoBehaviour
             }
             if (x >= 10)
             {
-                streak++;
-                for (x = 0; x < 10; x++)
-                {
-                    minos[x, y].SetState(BlockState.matched);
-                }
+                for (int z = y; z < 20; z++)
+                    for (x = 0; x < 10 ; x++)
+                        minos[x, z].SetState(minos[x, z + 1].State);
+                y--;
             }
         }
+        
+        return;
     }
-    public void Eliminate()
-    {
 
-    }
 }

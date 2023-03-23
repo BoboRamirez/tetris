@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 
@@ -162,6 +163,10 @@ public struct MatCoor
         this.x = b.x;
         this.y = b.y;
     }
+    public override string ToString()
+    {
+        return $"x: {this.x}, y: {this.y}";
+    }
 }
 public enum TetriminoType
 {
@@ -184,7 +189,6 @@ public enum BlockState
     active3,
     available,
     locked,
-    matched,
 }
 /// <summary>
 /// _state of the game

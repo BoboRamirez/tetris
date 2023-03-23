@@ -441,7 +441,19 @@ MonoBehaviour:
     m_ActionId: 0470f514-3fc4-4450-9dc7-2c9aa9e3b490
     m_ActionName: TetriminoMap/SoftDrop[/Keyboard/s]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 539570451}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: HardDrop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2ef81bbf-ac79-4d9e-90a0-a16db595e5e6
     m_ActionName: TetriminoMap/HardDrop[/Keyboard/space]
   - m_PersistentCalls:
