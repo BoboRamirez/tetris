@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject spawnerGO;
     private Spawner spawner;
+    private HoldZoneControl holder;
     private float FallDelay
     {
         get
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
             return Data.fallDelay[difficulty];
         }
     }
+    private bool canHold;
     private void Awake()
     {
         if (manager == null)
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
         MatrixManager.manager.InitializeMatrix();
         tetrimino = tetriminoGO.GetComponent<Tetrimino>();
         spawner = spawnerGO.GetComponent<Spawner>();
+        holder = spawnerGO.GetComponentInChildren<HoldZoneControl>();
     }
 
     // Update is called once per frame
@@ -71,6 +74,7 @@ public class GameManager : MonoBehaviour
         else
         {
             spawner.Spawn();
+            canHold = true;
         }
     }
     
@@ -169,15 +173,26 @@ public class GameManager : MonoBehaviour
     public void SpawnTetrimino(InputAction.CallbackContext context)
     {
         //Debug.Log(tetrimino.IsActive);
-
+        /*
         if (!tetrimino.IsActive && context.phase == InputActionPhase.Performed)
         {
             spawner.Spawn();
-        }
+
+        }*/
     }
 
     public void ExceedRootGameOver()
     {
+        Debug.Log("game over!");
         return;
+    }
+
+    public void Hold(InputAction.CallbackContext context)
+    {
+        if (canHold && context.phase == InputActionPhase.Performed)
+        {
+            holder.Exchange(tetrimino);
+            canHold = false;
+        }
     }
 }

@@ -110,7 +110,9 @@ public class MatrixManager : MonoBehaviour
         }
         return true;
     }
-
+    /// <summary>
+    /// match pattern and clean lines
+    /// </summary>
     public void MatchPatternAndEliminate()
     {
         int x;

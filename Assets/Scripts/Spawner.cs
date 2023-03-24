@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     /// <summary>
     /// all types in order, shuffled later
     /// </summary>
-    private TetriminoType[] spawnList = new TetriminoType[Data.TetriminoCount];
+    private readonly TetriminoType[] spawnList = new TetriminoType[Data.TetriminoCount];
     /// <summary>
     /// mapping from tetriminoType to gameObject
     /// </summary>
@@ -23,6 +23,7 @@ public class Spawner : MonoBehaviour
     /// No. of Tetrimino to spawn in the spawnList
     /// </summary>
     private int cur;
+    private NextInLineControl next;
     private void Start()
     {
         int i = 0;
@@ -31,6 +32,7 @@ public class Spawner : MonoBehaviour
         //instanceMap = BuildTetriminoDictionary(spawnList, tetriminoInstances);
         ShuffleSpawnList();
         tetrimino = tetriminoControl.GetComponent<Tetrimino>();
+        next = GetComponentInChildren<NextInLineControl>();
     }
     /// <summary>
     /// shuffle spawnList and reset cur
@@ -58,6 +60,7 @@ public class Spawner : MonoBehaviour
         cur++;
         if (cur >= Data.TetriminoCount)
             ShuffleSpawnList();
+        next.UpdateNextZone(spawnList[cur]);
     }
     /*private Dictionary<TetriminoType, GameObject> BuildTetriminoDictionary(TetriminoType[] tList, GameObject[] goList)
     {
@@ -70,7 +73,7 @@ public class Spawner : MonoBehaviour
         }
         return d;
     }*/
-
+    
 
 }
 

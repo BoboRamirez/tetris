@@ -233,4 +233,12 @@ public class Tetrimino : MonoBehaviour
         foreach (MatCoor c in minoCoordinates)
             Debug.Log(c);
     }
+    /// <summary>
+    /// deactivate the current tetrimino. used for exchange holding zone
+    /// </summary>
+    public void EraseTetrimino()
+    {
+        matrix.ClearBlocks(minoCoordinates);
+        _isActive = false;
+    }
 }
