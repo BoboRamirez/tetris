@@ -11,5 +11,6 @@ public class NextInLineControl : MonoBehaviour
     {
         Destroy( _instance );
         _instance = Instantiate(tetriminoList[(int)t], transform);
+        Debug.Log($"{transform.position}");
     }
 }

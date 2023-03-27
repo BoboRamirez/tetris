@@ -56,7 +56,7 @@ public class Spawner : MonoBehaviour
     public void Spawn()
     {
         tetrimino.InitializeTetrimino(spawnList[cur]);
-        Debug.Log(spawnList[cur]);
+        //Debug.Log(spawnList[cur]);
         cur++;
         if (cur >= Data.TetriminoCount)
             ShuffleSpawnList();
