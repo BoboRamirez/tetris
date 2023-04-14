@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         {
             if (tetrimino.LockTimer <= 0 || tetrimino.OperationCounter <= 0)
             {
+                tetrimino.HardDrop();
                 if (!tetrimino.Lock())
                 {
                     ExceedRootGameOver();
@@ -80,8 +81,8 @@ public class GameManager : MonoBehaviour
     
     public void MoveLeft(InputAction.CallbackContext context)
     {
-/*        Debug.Log(tetrimino.IsActive);
-*/        if (tetrimino.IsActive)
+/*        Debug.Log(tetrimino.IsActive);*/
+        if (tetrimino.IsActive)
         {
             if (context.phase == InputActionPhase.Started)
             {

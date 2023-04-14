@@ -136,4 +136,11 @@ public class MatrixManager : MonoBehaviour
         return;
     }
 
+    public void ChannelGhostPiece(MatCoor[] m)
+    {
+        foreach (MatCoor c in m)
+        {
+            minos[c.x, c.y].SetState(BlockState.ghost);
+        }
+    }
 }

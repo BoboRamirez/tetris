@@ -1,13 +1,11 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; 
 
 public class Tetrimino : MonoBehaviour
 {
     public RotationState orientation = RotationState.north;
-    [SerializeField]
     public TetriminoType type = TetriminoType.O;
     public MatCoor[] minoCoordinates = new MatCoor[4];
     private int rotationCenter = 0;
@@ -41,11 +39,13 @@ public class Tetrimino : MonoBehaviour
             return min;
         }
     }
+    [SerializeField]
+    private GhostPiece _ghostPiece;
 
     private void Start()
     {
         matrix = MatrixManager.manager;
-        Console.WriteLine(matrix.ToString());
+        //Console.WriteLine(matrix.ToString());
     }
     public void InitializeTetrimino(TetriminoType t)
     {
@@ -59,6 +59,7 @@ public class Tetrimino : MonoBehaviour
         _lockTimer = Data.defaultLockTime;
         _operationCounter = 15;
         _diveDepth = 30;
+        _ghostPiece.ConjureGhostPiece(GetDropSpot());
     }
     /// <summary>
     /// get matrix location of drop spot, or ghost piece,  of current tetrimino
@@ -119,14 +120,9 @@ public class Tetrimino : MonoBehaviour
     }
     public void HardDrop()
     {
-        /*Debug.Log("on HardDrop:");
-        PrintMinoCoordinates();*/
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = GetDropSpot();
-/*        Debug.Log("drop Spot:");
-        PrintMinoCoordinates();*/
         matrix.ShowTetriminoBlocks(minoCoordinates);
-        //gameObject.transform.position = Data.GetUnityPos(orientation, minoCoordinates[0]);
     }
     /// <summary>
     /// lock the current tetrimino. if true, then check for elimination and game continues; else, that means some mino went wild in this tetrimino and game over
@@ -134,9 +130,11 @@ public class Tetrimino : MonoBehaviour
     /// <returns>if game continues</returns>
     public bool Lock()
     {
+        //see if game is over or not
         bool doseContinue;
         //Debug.LogWarning("locked!");
         _isActive = false;
+        _ghostPiece.PurgeGhostPiece();
         _lockTimer = Data.defaultLockTime;
         _operationCounter = 15;
         doseContinue = matrix.LockTetriminoBlocks(minoCoordinates);
@@ -180,6 +178,7 @@ public class Tetrimino : MonoBehaviour
                 matrix.ShowTetriminoBlocks(minoCoordinates);
                 _lockTimer = Data.defaultLockTime;
                 _operationCounter--;
+                _ghostPiece.UpdateGhostPiece(GetDropSpot());
                 return;
             }
         }
@@ -217,6 +216,7 @@ public class Tetrimino : MonoBehaviour
         matrix.ShowTetriminoBlocks(minoCoordinates);
         _lockTimer = Data.defaultLockTime;
         _operationCounter--;
+        _ghostPiece.UpdateGhostPiece(GetDropSpot());
     }
     /// <summary>
     /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0
@@ -240,5 +240,6 @@ public class Tetrimino : MonoBehaviour
     {
         matrix.ClearBlocks(minoCoordinates);
         _isActive = false;
+        _ghostPiece.PurgeGhostPiece();
     }
 }

@@ -35,6 +35,11 @@ public class Mino : MonoBehaviour
             case BlockState.locked:
                 spriteRenderer.enabled = true;
                 break;
+            case BlockState.ghost:
+                spriteRenderer.enabled = true;
+                break;
+            default:
+                break;
         }
     }
 }

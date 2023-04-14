@@ -189,6 +189,7 @@ public enum BlockState
     active3,
     available,
     locked,
+    ghost,
 }
 /// <summary>
 /// _state of the game
