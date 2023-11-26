@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 public class MatrixManager : MonoBehaviour
 {
@@ -47,7 +48,7 @@ public class MatrixManager : MonoBehaviour
     /// <param name="m">coordinate of the tetrimino to be updated</param>
     /// <exception cref="System.ArgumentException">length of m is not 4</exception>
     /// <exception cref="System.Exception">some block is occupied</exception>
-    public void ShowTetriminoBlocks(MatCoor[] m)
+    public void ShowTetriminoBlocks(MatCoor[] m, TetriminoType t)
     {
         if (m.Length != 4)
         {
@@ -56,16 +57,16 @@ public class MatrixManager : MonoBehaviour
         }
         for (int i = 0; i < 4; i++)
         {
-            if (minos[m[i].x, m[i].y].State == BlockState.available)
+            if (minos[m[i].x, m[i].y].State == BlockState.available || minos[m[i].x, m[i].y].State == BlockState.ghost)
             {
-                minos[m[i].x, m[i].y].SetState((BlockState) i);
+                minos[m[i].x, m[i].y].SetState(BlockState.active, t);
             }
             else
                 Debug.LogError($"Wrong coordinate: ({m[i].x}:{m[i].y}) already occupied");
         }
         return ;
     }
-    /// <summary>
+/*    /// <summary>
     /// Generate minoCoordinates. Used only in initialization.
     /// </summary>
     /// <param name="c">Target Coordinate</param>
@@ -73,7 +74,7 @@ public class MatrixManager : MonoBehaviour
     private GameObject GenerateMinos(MatCoor c)
     {
         return Instantiate(mino, new Vector2(0.5f + c.x, 0.5f + c.y), Quaternion.identity);
-    }
+    }*/
     /// <summary>
     /// See if block in MatCoor c is available
     /// </summary>
@@ -87,7 +88,7 @@ public class MatrixManager : MonoBehaviour
         return isVacant;
     }
 
-    public bool LockTetriminoBlocks(MatCoor[] m)
+    public bool LockTetriminoBlocks(MatCoor[] m, TetriminoType t)
     {
         if (m.Length != 4)
         {
@@ -106,7 +107,7 @@ public class MatrixManager : MonoBehaviour
             {
                 return false;
             }
-            minos[c.x, c.y].SetState(BlockState.locked);
+            minos[c.x, c.y].SetState(BlockState.locked, t);
         }
         return true;
     }
@@ -116,7 +117,6 @@ public class MatrixManager : MonoBehaviour
     public void MatchPatternAndEliminate()
     {
         int x;
-        List<int> eliminateList = new();
         for (int y = 0; y <20; y++)
         {
             for (x = 0; x < 10;  x++)
@@ -127,8 +127,11 @@ public class MatrixManager : MonoBehaviour
             if (x >= 10)
             {
                 for (int z = y; z < 20; z++)
-                    for (x = 0; x < 10 ; x++)
-                        minos[x, z].SetState(minos[x, z + 1].State);
+                    for (x = 0; x < 10; x++)
+                    {
+                        Debug.Log($"({x}, {z}) get {minos[x, z + 1].State} and {minos[x, z + 1].Type} ");
+                        minos[x, z].SetState(minos[x, z + 1].State, minos[x, z + 1].Type);
+                    }
                 y--;
             }
         }
@@ -140,7 +143,8 @@ public class MatrixManager : MonoBehaviour
     {
         foreach (MatCoor c in m)
         {
-            minos[c.x, c.y].SetState(BlockState.ghost);
+            if (minos[c.x, c.y].State == BlockState.available)
+                minos[c.x, c.y].SetState(BlockState.ghost);
         }
     }
 }

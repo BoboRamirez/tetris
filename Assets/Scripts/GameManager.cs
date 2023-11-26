@@ -10,13 +10,9 @@ public class GameManager : MonoBehaviour
     public int difficulty = 1;
     public GameState state = GameState.defaultPhase;
     private float fallCounter = 0;
-    [SerializeField]
-    private GameObject tetriminoGO;
-    private Tetrimino tetrimino;
-    [SerializeField]
-    private GameObject spawnerGO;
-    private Spawner spawner;
-    private HoldZoneControl holder;
+    [SerializeField]    private Tetrimino tetrimino;
+    [SerializeField]    private Spawner spawner;
+    [SerializeField]    private HoldZoneControl holder;
     private float FallDelay
     {
         get
@@ -41,9 +37,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         MatrixManager.manager.InitializeMatrix();
-        tetrimino = tetriminoGO.GetComponent<Tetrimino>();
-        spawner = spawnerGO.GetComponent<Spawner>();
-        holder = spawnerGO.GetComponentInChildren<HoldZoneControl>();
     }
 
     // Update is called once per frame

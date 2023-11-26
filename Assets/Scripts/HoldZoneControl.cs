@@ -5,8 +5,8 @@ using UnityEngine;
 public class HoldZoneControl : MonoBehaviour
 {
     private GameObject _instance = null;
-    [SerializeField]
-    private GameObject[] tetriminoList;
+    private Vector3 _holdPos = new Vector3(-3, 16, 0);
+    [SerializeField] private GameObject[] tetriminoList;
     private TetriminoType _instanceType;
     public void Exchange(Tetrimino tetrimino)
     {
@@ -23,7 +23,7 @@ public class HoldZoneControl : MonoBehaviour
             tetrimino.EraseTetrimino();
             tetrimino.InitializeTetrimino(_instanceType);
             Destroy(_instance);
-            _instance = Instantiate(tetriminoList[(int) tmp], transform);
+            _instance = Instantiate(tetriminoList[(int) tmp], _holdPos, Quaternion.identity);
             _instanceType = tmp;
         }
     }

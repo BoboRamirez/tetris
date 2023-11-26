@@ -5,25 +5,17 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     private System.Random rand = new((int)System.DateTime.Now.Ticks);
-    /// <summary>
-    /// incoming tetrimino gameObjects, in the order of OITLJSZ
-    /// </summary>
-    [SerializeField]
-    private GameObject tetriminoControl;
-    /// <summary>
-    /// all types in order, shuffled later
-    /// </summary>
     private readonly TetriminoType[] spawnList = new TetriminoType[Data.TetriminoCount];
     /// <summary>
     /// mapping from tetriminoType to gameObject
     /// </summary>
     //Dictionary<TetriminoType, GameObject> instanceMap = new Dictionary<TetriminoType, GameObject>();
-    private Tetrimino tetrimino;
+    [SerializeField]    private Tetrimino tetrimino;
     /// <summary>
     /// No. of Tetrimino to spawn in the spawnList
     /// </summary>
     private int cur;
-    private NextInLineControl next;
+    [SerializeField] private NextInLineControl next;
     private void Start()
     {
         int i = 0;
@@ -31,8 +23,6 @@ public class Spawner : MonoBehaviour
             spawnList[i++] = (TetriminoType)item;
         //instanceMap = BuildTetriminoDictionary(spawnList, tetriminoInstances);
         ShuffleSpawnList();
-        tetrimino = tetriminoControl.GetComponent<Tetrimino>();
-        next = GetComponentInChildren<NextInLineControl>();
     }
     /// <summary>
     /// shuffle spawnList and reset cur
@@ -62,18 +52,6 @@ public class Spawner : MonoBehaviour
             ShuffleSpawnList();
         next.UpdateNextZone(spawnList[cur]);
     }
-    /*private Dictionary<TetriminoType, GameObject> BuildTetriminoDictionary(TetriminoType[] tList, GameObject[] goList)
-    {
-        var d = new Dictionary<TetriminoType, GameObject>();
-        if (tList.Length != Data.TetriminoCount || goList.Length != Data.TetriminoCount)
-            return null;
-        for (int i = 0; i < Data.TetriminoCount; i++)
-        {
-            d.Add(tList[i], goList[i]);
-        }
-        return d;
-    }*/
-    
 
 }
 

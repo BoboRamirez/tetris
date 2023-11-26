@@ -183,10 +183,7 @@ public enum TetriminoType
 /// </summary>
 public enum BlockState
 {
-    active0,
-    active1,
-    active2,
-    active3,
+    active,
     available,
     locked,
     ghost,
