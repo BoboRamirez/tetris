@@ -26,7 +26,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _fresnelIntensity: 1.1
-    - _thresh: 0.88
+    - _thresh: 0.709
     m_Colors:
     - _color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

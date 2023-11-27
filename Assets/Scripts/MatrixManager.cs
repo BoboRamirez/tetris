@@ -129,7 +129,7 @@ public class MatrixManager : MonoBehaviour
                 for (int z = y; z < 20; z++)
                     for (x = 0; x < 10; x++)
                     {
-                        Debug.Log($"({x}, {z}) get {minos[x, z + 1].State} and {minos[x, z + 1].Type} ");
+                        //Debug.Log($"({x}, {z}) get {minos[x, z + 1].State} and {minos[x, z + 1].Type} ");
                         minos[x, z].SetState(minos[x, z + 1].State, minos[x, z + 1].Type);
                     }
                 y--;

@@ -110,7 +110,7 @@ public class Tetrimino : MonoBehaviour
         for (int i = 0; i < 4; i++)
             minoCoordinates[i].y--;
         matrix.ShowTetriminoBlocks(minoCoordinates, type);
-        Debug.Log($"fall type: {type}");
+        //Debug.Log($"fall type: {type}");
         //post-fall process
         _lockTimer = Data.defaultLockTime;
         if (CurDepth < _diveDepth)
@@ -215,10 +215,10 @@ public class Tetrimino : MonoBehaviour
         }
         matrix.ClearBlocks(minoCoordinates);
         minoCoordinates = newCoor;
+        _ghostPiece.UpdateGhostPiece(GetDropSpot());
         matrix.ShowTetriminoBlocks(minoCoordinates, type);
         _lockTimer = Data.defaultLockTime;
         _operationCounter--;
-        _ghostPiece.UpdateGhostPiece(GetDropSpot());
     }
     /// <summary>
     /// get matrix positions of Mino No.1, 2, 3 in matrix from matrix position of Mino No.0

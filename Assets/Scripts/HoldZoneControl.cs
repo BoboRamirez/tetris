@@ -16,7 +16,7 @@ public class HoldZoneControl : MonoBehaviour
         {
             tetrimino.EraseTetrimino();
             _instanceType = tetrimino.type;
-            _instance = Instantiate(tetriminoList[(int) _instanceType], transform);
+            _instance = Instantiate(tetriminoList[(int) _instanceType], _holdPos, Quaternion.identity);
         }
         else
         {
