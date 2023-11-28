@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]    private Tetrimino tetrimino;
     [SerializeField]    private Spawner spawner;
     [SerializeField]    private HoldZoneControl holder;
+    [SerializeField] private Animator _popupAnimator;
     private float FallDelay
     {
         get
@@ -20,23 +21,24 @@ public class GameManager : MonoBehaviour
             return Data.fallDelay[difficulty];
         }
     }
-    private bool canHold;
+    private bool canHold, _doPause;
     private void Awake()
     {
         if (manager == null)
         {
             manager = this;
-            DontDestroyOnLoad(this);
+            //DontDestroyOnLoad(this);
         }
         else if (manager != this)
             Destroy(gameObject);
     }
-
+    
 
     // Start is called before the first frame update
     void Start()
     {
         MatrixManager.manager.InitializeMatrix();
+        _doPause = false;
     }
 
     // Update is called once per frame
@@ -50,6 +52,7 @@ public class GameManager : MonoBehaviour
                 if (!tetrimino.Lock())
                 {
                     ExceedRootGameOver();
+                    return;
                 }
             }
             else if (!tetrimino.HasSpaceToFall())
@@ -64,6 +67,10 @@ public class GameManager : MonoBehaviour
             }
             else
                 fallCounter += Time.deltaTime;
+        }
+        else if (_doPause)
+        {
+            return;
         }
         else
         {
@@ -177,7 +184,9 @@ public class GameManager : MonoBehaviour
 
     public void ExceedRootGameOver()
     {
-        Debug.Log("game over!");
+        //Debug.Log("game over!");
+        _doPause = true;
+        _popupAnimator.SetBool("isOver", true);
         return;
     }
 

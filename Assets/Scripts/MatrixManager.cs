@@ -16,7 +16,7 @@ public class MatrixManager : MonoBehaviour
         if (manager == null)
         {
             manager = this;
-            DontDestroyOnLoad(this);
+            //DontDestroyOnLoad(this);
         }
         else if (manager != this)
             Destroy(gameObject);
