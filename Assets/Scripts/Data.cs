@@ -11,10 +11,24 @@ public static class Data
     public readonly static float[] fallDelay = 
         { 0f, 1.0f, 0.793f, 0.618f, 0.473f, 0.355f, 0.262f, 0.190f, 0.135f,
         0.094f, 0.064f, 0.043f, 0.028f, 0.018f, 0.011f, 0.007f };
+    public readonly static float MinoIntensity = 1.0f;
+    public readonly static float MinoThreshold = 0.0f;
+
     /// <summary>
     /// just in case I wanna add more Tetriminos, like a bomb or sth.
     /// </summary>
     public readonly static int TetriminoCount = 7;
+    public readonly static Dictionary<TetriminoType, Color> TetriminoColor = new()
+    {
+        {TetriminoType.O, new Color(0.996f, 0.772f, 0.043f) },
+        {TetriminoType.I, new Color(0.129f, 0.631f, 0.867f) },
+        {TetriminoType.J, new Color(0f, 0.416f, 0.643f) },
+        {TetriminoType.L, new Color(0.820f, 0.506f, 0.165f) },
+        {TetriminoType.S, new Color(0.424f, 0.663f, 0.235f) },
+        {TetriminoType.T, new Color(0.478f, 0.125f, 0.482f) },
+        {TetriminoType.Z, new Color(0.765f, 0.145f, 0.125f) },
+
+    };
 
     public readonly static float defaultLockTime = 0.5f;
     /// <summary>
@@ -92,6 +106,8 @@ public static class Data
         };
         return v;
     }
+
+
     /*
     public static MatCoor ShiftPositionFromUnity2Matrix(TetriminoType t, RotationState r, Vector2 p)
     {

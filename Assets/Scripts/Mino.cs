@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Rendering.Universal;
 
 public class Mino : MonoBehaviour
@@ -12,13 +13,12 @@ public class Mino : MonoBehaviour
     //public GameObject minoGO;
     [SerializeField]private MeshRenderer _render;
     private Material _mat;
-    private float _minoIntensity = 1, minoThresh = 0;
     [SerializeField] private TetriminoType _type;
     public TetriminoType Type { get {  return _type; } }
     public void Initialized(int x, int y)
     {
         coordinate = new MatCoor(x, y);
-        _mat = _render.material;
+        _mat = _render.sharedMaterial;
         //Debug.Log(_mat.GetColor("_color"));
         SetState(BlockState.available);
         //Debug.Log("init done!");
@@ -54,9 +54,11 @@ public class Mino : MonoBehaviour
                 SetMinoMat(1.1f, 0.88f, Color.white);
                 return;
             default:
-                break;
+                SetMinoMat(Data.MinoIntensity, Data.MinoThreshold, Data.TetriminoColor[t]);
+                return;
         }
-        switch (t)
+        
+        /*switch (t)
         {
             case TetriminoType.O:
                 SetMinoMat(_minoIntensity, minoThresh, new Color(0.996f, 0.772f, 0.043f));
@@ -82,20 +84,31 @@ public class Mino : MonoBehaviour
             default:
                 Debug.Log("wrong type perhaps?");
                 break;
-        }
+        }*/
     }
 
     private void SetMinoMat(float intensity = 1, float threshold = 0, Color color = default)
     {
-        _mat.SetColor("_color", color);
-        _mat.SetFloat("_fresnelIntensity", intensity);
-        _mat.SetFloat("_thresh", threshold);
+        if (_mat.enableInstancing)
+        {
+            MaterialPropertyBlock props = new();
+            props.SetColor("_color", color);
+            props.SetFloat("_fresnelIntensity", intensity);
+            props.SetFloat("_thresh", threshold);
+            _render.SetPropertyBlock(props);
+        }
+        else
+        {
+            _mat.SetColor("_color", color);
+            _mat.SetFloat("_fresnelIntensity", intensity);
+            _mat.SetFloat("_thresh", threshold);
+        }
     }
 }
 
 
 
-public struct MinoShape
+/*public struct MinoShape
 {
     public float Intensity;
     public float Threshhold;
@@ -106,4 +119,4 @@ public struct MinoShape
         this.Threshhold = Threshold;
         this.Color = Color;
     }
-}
+}*/

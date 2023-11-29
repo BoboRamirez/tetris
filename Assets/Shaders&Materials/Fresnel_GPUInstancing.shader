@@ -1,4 +1,4 @@
-Shader "Custom/MinoCubeFresnel"
+Shader "Custom/MinoCubeFresnelGPU"
 {
     Properties
     {
@@ -21,29 +21,36 @@ Shader "Custom/MinoCubeFresnel"
             #pragma fragment frag
             #pragma multi_compile_instancing	
             #include "UnityCG.cginc"
-            float _fresnelIntensity, _thresh;
-            float3 _color;
+            //float _fresnelIntensity, _thresh;
+            //float3 _color;
             struct meshData
             {
                 float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
                 float4 normal : NORMAL;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
             {
                 float4 vertex : SV_POSITION;
-                float2 uv : TEXCOORD0;
                 float4 normal : NORMAL;
                 float3 wPos : TEXCOORD1;
                 float3 wNor : TEXCOORD2;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
+
+             UNITY_INSTANCING_BUFFER_START(Props)
+                UNITY_DEFINE_INSTANCED_PROP(float4, _color)
+                UNITY_DEFINE_INSTANCED_PROP(float, _thresh)
+                UNITY_DEFINE_INSTANCED_PROP(float, _fresnelIntensity)
+            UNITY_INSTANCING_BUFFER_END(Props)
 
             v2f vert (meshData v)
             {
                 v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
                 o.vertex = UnityObjectToClipPos(v.vertex);//mvp matrix
-                o.uv = v.uv;
                 o.normal = v.normal;
                 o.wPos = mul (unity_ObjectToWorld, v.vertex);
                 o.wNor = UnityObjectToWorldNormal(v.normal);
@@ -53,11 +60,12 @@ Shader "Custom/MinoCubeFresnel"
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
+                UNITY_SETUP_INSTANCE_ID(i);
                 float3 N = normalize(i.wNor);
                 float3 V = normalize(_WorldSpaceCameraPos - i.wPos);
-                float fresnel =  pow(1 - abs(dot(N, V)), _fresnelIntensity);
-                fresnel *= (fresnel > _thresh);
-                fixed4 col = fixed4(_color * fresnel, 0);
+                float fresnel =  pow(1 - abs(dot(N, V)), UNITY_ACCESS_INSTANCED_PROP(Props, _fresnelIntensity));
+                fresnel *= (fresnel > UNITY_ACCESS_INSTANCED_PROP(Props, _thresh));
+                fixed4 col = fixed4(UNITY_ACCESS_INSTANCED_PROP(Props, _color) * fresnel);
                 return col;
             }
             ENDCG
