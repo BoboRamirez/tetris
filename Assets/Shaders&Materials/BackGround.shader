@@ -4,6 +4,8 @@ Shader "Custom/BackGround"
     {
         _width ("Border Width", Range(0.0, 1.0)) = 0.1
         _color ("Color", Color) = (0, 0, 0, 1)
+        _scale ("XYScale", Range(1, 2)) = 2
+        _MainTex ("MainTexture", 2D) = "white"{}
     }
     SubShader
     {
@@ -21,6 +23,7 @@ Shader "Custom/BackGround"
             #include "UnityCG.cginc"
             float _width;
             float4 _color;
+            float _scale;
             struct meshData
             {
                 float4 vertex : POSITION;
@@ -42,14 +45,14 @@ Shader "Custom/BackGround"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
                 o.normal = v.normal;
-                o.lcoor = float2(o.uv.x, o.uv.y * 2);
+                o.lcoor = float2(o.uv.x, o.uv.y * _scale);
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
                 //return fixed4(0, i.uv, 0);
-                clip((i.lcoor.x > _width && i.lcoor.x < (1 - _width) && i.lcoor.y > _width && i.lcoor.y < (2 - _width)) * -1);
+                clip((i.lcoor.x > _width && i.lcoor.x < (1 - _width) && i.lcoor.y > _width && i.lcoor.y < (_scale - _width)) * -1);
                 return _color;
             }
             ENDCG

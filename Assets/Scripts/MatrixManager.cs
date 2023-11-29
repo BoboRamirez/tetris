@@ -6,8 +6,8 @@ using UnityEngine.InputSystem.Controls;
 public class MatrixManager : MonoBehaviour
 {
     public static MatrixManager manager;
-    [SerializeField]
-    private GameObject mino;
+    [SerializeField] private GameObject mino;
+    [SerializeField] private ScoreControl _scoreControl;
     public Mino[,] minos = new Mino[10, 22];
     private GameObject tempMino;
 
@@ -116,7 +116,7 @@ public class MatrixManager : MonoBehaviour
     /// </summary>
     public void MatchPatternAndEliminate()
     {
-        int x;
+        int x, lineCount = 0;
         for (int y = 0; y <20; y++)
         {
             for (x = 0; x < 10;  x++)
@@ -126,6 +126,7 @@ public class MatrixManager : MonoBehaviour
             }
             if (x >= 10)
             {
+                lineCount++;
                 for (int z = y; z < 20; z++)
                     for (x = 0; x < 10; x++)
                     {
@@ -135,6 +136,7 @@ public class MatrixManager : MonoBehaviour
                 y--;
             }
         }
+        _scoreControl.UpdateScore(lineCount);
         
         return;
     }

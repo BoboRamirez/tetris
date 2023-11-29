@@ -106,8 +106,6 @@ public class Mino : MonoBehaviour
     }
 }
 
-
-
 /*public struct MinoShape
 {
     public float Intensity;

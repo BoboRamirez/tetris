@@ -10,19 +10,19 @@ public class NextInLineControl : MonoBehaviour
     private GameObject _instance = null;
     [SerializeField]
     private GameObject[] tetriminoList;
-    private Vector3 _nextPos = new Vector3(13, 16, 0);
+    private Vector3 _nextPos = new Vector3(12.5f, 16, 0);
     public void UpdateNextZone(TetriminoType t)
     {
         Destroy( _instance );
         _instance = Instantiate(tetriminoList[(int)t], _nextPos, Quaternion.identity);
-        Enlight(t);
+        Enlight(_instance, t);
         /*Debug.Log($"{transform.position}");*/
     }
-    private void Enlight(TetriminoType t)
+    public void Enlight(GameObject i, TetriminoType t)
     {
-        foreach (MeshRenderer renderer in _instance.GetComponentsInChildren<MeshRenderer>())
+        foreach (MeshRenderer renderer in i.GetComponentsInChildren<MeshRenderer>())
         {
-            Debug.Log(renderer.gameObject);
+            //Debug.Log(renderer.gameObject);
             Material mat = renderer.sharedMaterial;
             if (mat.enableInstancing)
             {
