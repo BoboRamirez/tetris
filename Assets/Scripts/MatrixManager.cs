@@ -136,7 +136,10 @@ public class MatrixManager : MonoBehaviour
                 y--;
             }
         }
-        _scoreControl.UpdateScore(lineCount);
+        if (lineCount > 0)
+        {
+            _scoreControl.UpdateScore(lineCount);
+        }
         
         return;
     }
