@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("game over!");
         _doPause = true;
+        MatrixManager.manager.Dim();
         _popupAnimator.SetBool("isOver", true);
         return;
     }

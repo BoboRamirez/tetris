@@ -177,10 +177,10 @@ public class Tetrimino : MonoBehaviour
             {
                 orientation = newOrientation;
                 minoCoordinates = tempCoor;
+                _ghostPiece.UpdateGhostPiece(GetDropSpot());
                 matrix.ShowTetriminoBlocks(minoCoordinates, type);
                 _lockTimer = Data.defaultLockTime;
                 _operationCounter--;
-                _ghostPiece.UpdateGhostPiece(GetDropSpot());
                 return;
             }
         }

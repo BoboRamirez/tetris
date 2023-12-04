@@ -152,4 +152,12 @@ public class MatrixManager : MonoBehaviour
                 minos[c.x, c.y].SetState(BlockState.ghost);
         }
     }
+    public void Dim()
+    {
+        foreach (Mino m in minos)
+        {
+            if (m.State != BlockState.available)
+                m.SetState(BlockState.ghost);
+        }
+    }    
 }
